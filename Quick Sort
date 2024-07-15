@@ -1,0 +1,26 @@
+def quickSort(array):
+    pivot = array[0]
+    greater = []
+    equal = []
+    lesser = []
+
+    for element in array:
+        if element < pivot:
+            lesser.append(element)
+        elif element == pivot:
+            equal.append(element)
+        else:
+            greater.append(element)
+    
+    return lesser + equal + greater
+
+import sys
+
+input = sys.stdin.read
+data = input().splitlines()
+
+size = int(data[0])
+numbers = list(map(int, data[1].split()))
+
+sorted_numbers = quickSort(numbers)
+print(' '.join(map(str, sorted_numbers)))
