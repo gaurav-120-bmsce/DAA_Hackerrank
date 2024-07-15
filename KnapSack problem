@@ -1,37 +1,37 @@
-def u(n, c):
-    r = []
+def unbounded_knapsack(num_cases, cases):
+    results = []
     
-    for case in c:
-        s, t = case[0]
-        e = case[1]
+    for case in cases:
+        (num_items, target_sum) = case[0]
+        elements = case[1]
         
         # Initialize dp array
-        dp = [0] * (t + 1)
+        dp = [0] * (target_sum + 1)
 
-        for v in e:
-            for j in range(v, t + 1):
-                dp[j] = max(dp[j], dp[j - v] + v)
+        for element in elements:
+            for current_sum in range(element, target_sum + 1):
+                dp[current_sum] = max(dp[current_sum], dp[current_sum - element] + element)
         
-        r.append(dp[t])
+        results.append(dp[target_sum])
     
-    return r
+    return results
 
 import sys
 
 input = sys.stdin.read
 data = input().splitlines()
 
-k = int(data[0])
+num_cases = int(data[0])
 cases = []
 
 line_index = 1
-for _ in range(k):
-    s, t = map(int, data[line_index].split())
-    e = list(map(int, data[line_index + 1].split()))
-    cases.append(((s, t), e))
+for _ in range(num_cases):
+    num_items, target_sum = map(int, data[line_index].split())
+    elements = list(map(int, data[line_index + 1].split()))
+    cases.append(((num_items, target_sum), elements))
     line_index += 2
 
-results = u(k, cases)
+results = unbounded_knapsack(num_cases, cases)
 
 for result in results:
     print(result)
