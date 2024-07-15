@@ -1,0 +1,53 @@
+import math
+import os
+import random
+import re
+import sys
+from collections import defaultdict
+
+# Complete the maximum_people function below.
+def maximum_people(towns, cloud_start_positions, cloud_end_positions):
+    towns = sorted(towns)
+    cloud_start_positions = sorted(cloud_start_positions)
+    cloud_end_positions = sorted(cloud_end_positions)
+
+    start_index = 0
+    end_index = 0
+    active_clouds = set()
+
+    cloud_population = defaultdict(int)
+    total_free_population = 0
+    
+    for town_index in range(len(towns)):
+        town_position = towns[town_index][0]
+        while start_index < len(cloud_start_positions) and cloud_start_positions[start_index][0] <= town_position:
+            active_clouds.add(cloud_start_positions[start_index][1])
+            start_index += 1
+        while end_index < len(cloud_end_positions) and cloud_end_positions[end_index][0] < town_position:
+            active_clouds.remove(cloud_end_positions[end_index][1])
+            end_index += 1
+        if len(active_clouds) == 1:
+            towns[town_index][2] = list(active_clouds)[0]
+            cloud_population[list(active_clouds)[0]] += towns[town_index][1]
+        elif len(active_clouds) == 0:
+            total_free_population += towns[town_index][1]
+
+    return max(cloud_population.values(), default=0) + total_free_population
+
+def main():
+    num_towns = int(input().strip())
+    town_populations = [int(x) for x in input().strip().split()]
+    town_positions = [int(x) for x in input().strip().split()]
+    towns = [[position, population, -1] for position, population in zip(town_positions, town_populations)]
+    
+    num_clouds = int(input().strip())
+    cloud_positions = [int(x) for x in input().strip().split()]
+    cloud_ranges = [int(x) for x in input().strip().split()]
+    cloud_start_positions = [[cloud_positions[i] - cloud_ranges[i], i] for i in range(num_clouds)]
+    cloud_end_positions = [[cloud_positions[i] + cloud_ranges[i], i] for i in range(num_clouds)]
+    
+    result = maximum_people(towns, cloud_start_positions, cloud_end_positions)
+    print(result)
+
+if __name__ == "__main__":
+    main()
